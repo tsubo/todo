@@ -24,9 +24,7 @@ class TaskController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $tasks = $em->getRepository('AppBundle:Task')->findAll();
+        $tasks = $this->getUser()->getTasks();
 
         return $this->render('task/index.html.twig', array(
             'tasks' => $tasks,
@@ -47,6 +45,9 @@ class TaskController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            
+            $task->setOwner($this->getUser());
+
             $em->persist($task);
             $em->flush();
 
